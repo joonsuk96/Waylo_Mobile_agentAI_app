@@ -1,56 +1,51 @@
-# Welcome to your Expo app 👋
+# Waylo
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**여행 조건을 입력하면 AI가 나만의 일정을 만들어주는 Android 여행 계획 앱입니다.**
 
-## Get started
+유튜브 튜토리얼을 따라 시작한 프로젝트로, 화면 만들기부터 로그인, AI 연동, 데이터 저장, 실제 폰 설치까지 연결하며 개발했습니다.
 
-1. Install dependencies
+## 주요 기능
 
-   ```bash
-   npm install
-   ```
+- Google 계정으로 로그인
+- 목적지, 여행 날짜, 인원, 예산, 관심사에 맞는 AI 여행 일정 생성
+- 날짜별 일정, 예상 예산, 여행 사진과 지도 확인
+- 생성한 여행을 저장하고 내 여행 목록에서 다시 보기
+- AI 채팅으로 여행 관련 질문하기
 
-2. Start the app
+## 어떻게 만들었나요?
 
-   ```bash
-   npx expo start
-   ```
+1. **앱 화면 만들기** — TypeScript로 코드를 작성하고, React Native와 Expo로 홈·여행 입력·상세·채팅 화면을 만들었습니다.
+2. **로그인 연결하기** — Clerk를 연결해 Google 계정으로 로그인하고 로그인 상태를 유지하도록 했습니다.
+3. **여행 정보 저장하기** — Neon의 PostgreSQL 데이터베이스에 사용자와 여행 정보를 저장했습니다.
+4. **AI 일정 만들기** — 앱의 요청을 받는 서버 API를 만들고 OpenAI와 연결했습니다. Inngest는 생성 작업을 단계별로 관리하고 오류가 나면 재시도합니다.
+5. **사진과 지도 붙이기** — Unsplash에서 여행 사진을 가져오고, Photon으로 장소 좌표를 찾아 Google 지도에 표시했습니다.
+6. **실제 폰에서 사용하기** — 서버를 EAS Hosting에 배포하고 Inngest Cloud를 연결했습니다. EAS Build로 설치용 APK를 만들어 컴퓨터를 꺼도 사용할 수 있도록 구성했습니다.
 
-In the output, you'll find options to open the app in a
+## 앱이 동작하는 흐름
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```text
+Google 로그인 → 여행 조건 입력 → AI 일정 생성 → 결과 저장 → 일정·예산·지도 확인
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+## 주요 기술
 
-### Other setup steps
+| 역할 | 사용 기술 |
+|---|---|
+| 언어·모바일 화면 | TypeScript, React, React Native, Expo, Expo Router |
+| 화면 디자인 | NativeWind, Tailwind CSS, React Native StyleSheet |
+| 로그인·데이터 저장 | Clerk, Neon PostgreSQL, Drizzle ORM |
+| AI·작업 관리 | OpenAI API, Inngest, Zod |
+| 지도·사진 | react-native-maps, Google Maps, Photon, Unsplash, ImageKit |
+| 서버 배포·APK 제작 | EAS Hosting, EAS Build |
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## 개발 환경 실행
 
-## Learn more
+`npm ci`로 패키지를 설치한 뒤 `.env.example`을 `.env`로 복사하고 각 서비스의 키를 설정합니다. Android SDK·JDK 등 개발 도구와 데이터베이스 설정도 필요합니다.
 
-To learn more about developing your project with Expo, look at the following resources:
+- 첫 Android 실행: `npm run android`
+- 이후 개발 서버 실행: `npm run android:dev`
+- 로컬 작업 처리 서버 실행: 별도 터미널에서 `npm run inngest`
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+서비스별 설정은 프로젝트의 설정 문서를 참고하세요. 실제 비밀키가 들어 있는 `.env`는 GitHub에 올리지 않습니다.
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+> AI 일정과 비용은 참고용 제안입니다. 실제 장소 정보와 가격은 방문 전에 확인해주세요.

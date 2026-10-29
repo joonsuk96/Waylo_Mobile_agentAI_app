@@ -41,3 +41,28 @@ example
 # generated native folders
 /ios
 /android
+.env
+
+# Environment files (only the empty template is versioned)
+.env*
+!.env.example
+
+# Local credentials and signing material
+*.keystore
+credentials.json
+service-account*.json
+google-services.json
+GoogleService-Info.plist
+
+# Build artifacts, logs and local tools
+*.apk
+*.aab
+*.log
+.gradle/
+.cxx/
+local.properties
+.agents/
+.claude/
+skills-lock.json
+Thumbs.db
+Desktop.ini

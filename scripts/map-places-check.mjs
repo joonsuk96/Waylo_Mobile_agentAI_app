@@ -1,0 +1,18 @@
+import assert from "node:assert/strict";
+import {tripPlaces,hasCoordinates,groupPlaces,mapRegion,googleMapsUrl} from "../src/lib/trip-places.ts";
+const activity=(name,latitude,longitude)=>({name,latitude,longitude,time:"오후",description:"",location:name,estimatedCostKrw:0});
+const places=tripPlaces({days:[{day:1,date:"2026-11-01",activities:[activity("첫 장소",35.68,139.76),activity("미확인 장소",null,null)]},{day:2,date:"2026-11-02",activities:[activity("같은 장소",35.68,139.76),activity("다른 장소",35.7,139.8)]}]});
+assert.deepEqual(places.map(p=>p.number),[1,2,3,4]);
+assert.deepEqual(places.filter(hasCoordinates).map(p=>p.number),[1,3,4]);
+assert.deepEqual(places.filter(p=>p.day===2).map(p=>p.number),[3,4]);
+assert.equal(hasCoordinates({...places[0],latitude:0,longitude:0}),false);
+assert.equal(hasCoordinates({...places[0],latitude:NaN}),false);
+assert.equal(groupPlaces(places.filter(hasCoordinates)).length,2);
+assert.deepEqual(groupPlaces(places.filter(hasCoordinates))[0].map(p=>p.number),[1,3]);
+const region=mapRegion([{...places[0],longitude:179.9},{...places[0],longitude:-179.9}]);
+assert.ok(region.longitudeDelta<1);
+assert.equal(mapRegion([]),null);
+assert.ok(mapRegion([places[0]]).latitudeDelta>0);
+assert.equal(new URL(googleMapsUrl(places[0],"도쿄")).searchParams.get("query"),"35.68,139.76");
+assert.ok(new URL(googleMapsUrl(places[1],"도쿄")).searchParams.get("query").includes("미확인 장소"));
+console.log("Map place checks passed: stable numbers, missing coordinates, day filters, overlapping markers, dateline, external Google URL.");
